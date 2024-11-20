@@ -1,6 +1,6 @@
 // From https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/43.0/data/theme/gnome-shell-sass/_common.scss#L28
 $base_padding: 6px;
-$base_margin: 4px;
+$base_margin: 6px;
 
 $base_border_radius: 8px;
 $modal_radius: $base_border_radius * 2;
@@ -173,6 +173,8 @@ $dock_style_modes: [null, shrink, extended, extended-shrink];
                 margin-#{$side}: $side_margin;
                 padding: 0;
                 border-radius: $border_radius;
+                background-color: rgba(white, 0.2);
+                border: 1px solid $borders_color;
                 spacing: $base_padding;
             }
 
@@ -217,6 +219,11 @@ $dock_style_modes: [null, shrink, extended, extended-shrink];
                     &.updating {
                         opacity: 0.5;
                     };
+                    
+                    StIcon {
+                    	icon-shadow: 0 1px 2px rgba(black, 0.3),
+                    		     0 0 0 1px rgba(black, 0.5);
+                    }
                 }
 
                 .app-well-app,
@@ -244,15 +251,7 @@ $dock_style_modes: [null, shrink, extended, extended-shrink];
         &.fixed {
             #dash {
                 .dash-background {
-                    margin-#{opposite($side)}: $fixed_inner_margin;
-                }
-
-                .dash-item-container {
-
-                    .app-well-app,
-                    .show-apps {
-                        padding-#{opposite($side)}: $padding + $fixed_inner_margin;
-                    }
+                    margin-#{opposite($side)}: 0;
                 }
             }
         }
@@ -272,7 +271,7 @@ $dock_style_modes: [null, shrink, extended, extended-shrink];
 
 .dash-item-container .overview-tile .app-grid-running-dot {
     margin-bottom: $dash_padding_gnome - 4px;
-    offset-y: -$dash_padding + $dash_edge_offset;
+    offset-y: -$dash_padding + $dash_edge_offset - 6;
 }
 
 @each $side in $dock_sides {
