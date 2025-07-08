@@ -166,15 +166,26 @@ $dock_style_modes: [null, shrink, extended, extended-shrink];
     &#{$style_selector} {
         #dash {
             margin: 0px;
+            //margin-#{opposite($side)}: 1px; // HACK: do not cut off 'transparent' borders
             padding: 0px;
 
             .dash-background {
                 margin: 0;
                 margin-#{$side}: $side_margin;
+                /*
+                @if is_horizontal($side) { // HACK: do not cut off 'transparent' borders
+                    margin-left: if($is_extended, 0px, 1px);
+                    margin-right: if($is_extended, 0px, 1px);
+                } @else {
+                    margin-top: if($is_extended, 0px, 1px);
+                    margin-bottom: if($is_extended, 0px, 1px);
+                }
+                */
                 padding: 0;
                 border-radius: $border_radius;
-                background-color: rgba(white, 0.2);
-                border: 1px solid $borders_color;
+                background-color: rgba(black, 0.64);
+                border: 1px solid rgba(white, 0.23);
+                //box-shadow: 0 0 0 1px rgba(black, 0.22); // draw transparent outside borders in a hacky way
                 spacing: $base_padding;
             }
 
@@ -238,6 +249,10 @@ $dock_style_modes: [null, shrink, extended, extended-shrink];
                     .app-well-app-running-dot,
                     .app-grid-running-dot {
                         margin-bottom: 2px;
+                        // style the dot
+                        height: 4px;
+                        width: 4px;
+                        //border: 1px solid rgba(black, 0.47);
                     }
                 }
 
