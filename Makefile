@@ -12,8 +12,9 @@ EXTRA_MODULES = \
                 dash.js \
                 docking.js \
                 appIcons.js \
-				appIconsDecorator.js \
+                appIconsDecorator.js \
                 appIconIndicators.js \
+                dockStruts.js \
                 fileManager1API.js \
                 imports.js \
                 launcherAPI.js \
@@ -77,8 +78,11 @@ mergepo: potfile
 		msgmerge -U $$l ./po/dashtodock.pot; \
 	done;
 
-./po/dashtodock.pot: ./po/POTFILES.in
-	xgettext --keyword=__ --keyword=N__ --add-comments='Translators:' -o po/dashtodock.pot --package-name "Dash to Dock" --from-code=utf-8 --files-from=$<
+POTFILES_IN = po/POTFILES.in
+POTFILES = $(shell cat $(POTFILES_IN))
+
+./po/dashtodock.pot: $(POTFILES_IN) $(POTFILES)
+	xgettext --keyword=__ --keyword=N__:1,2 --add-comments='TRANSLATORS:' -o po/dashtodock.pot --package-name "Dash to Dock" --from-code=utf-8 --files-from=$<
 
 ./po/%.mo: ./po/%.po
 	msgfmt -c $< -o $@
@@ -104,8 +108,10 @@ ifeq ($(INSTALLTYPE),system)
 	# system-wide settings and locale files
 	rm -r $(INSTALLBASE)/$(INSTALLNAME)/schemas $(INSTALLBASE)/$(INSTALLNAME)/locale
 	mkdir -p $(SHARE_PREFIX)/glib-2.0/schemas $(SHARE_PREFIX)/locale
-	cp -r ./schemas/*gschema.* $(SHARE_PREFIX)/glib-2.0/schemas
+	cp -r ./schemas/*.gschema.xml $(SHARE_PREFIX)/glib-2.0/schemas
 	cp -r ./_build/locale/* $(SHARE_PREFIX)/locale
+else
+	cp schemas/gschemas.compiled $(INSTALLBASE)/$(INSTALLNAME)/schemas/
 endif
 	-rm -fR _build
 	echo done
@@ -125,8 +131,7 @@ _build: all
 	mkdir -p _build/media
 	cd media ; cp $(EXTRA_MEDIA) ../_build/media/
 	mkdir -p _build/schemas
-	cp schemas/*.xml _build/schemas/
-	cp schemas/gschemas.compiled _build/schemas/
+	cp schemas/*.gschema.xml _build/schemas/
 	mkdir -p _build/locale
 	for l in $(MSGSRC:.po=.mo) ; do \
 		lf=_build/locale/`basename $$l .mo`; \
